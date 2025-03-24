@@ -903,6 +903,118 @@ export default function OrderPipelinePage() {
       recoveryType: "Implementation",
       billingCycle: "One-time",
     },
+    {
+      id: "REC-2023-0016",
+      client: "New Client 1",
+      engagementCode: "NEW-2023-0001",
+      amount: 10000,
+      dateBilled: new Date("2023-11-01"),
+      status: "Pending",
+      invoiceNumber: "INV-2023-4582",
+      paymentDate: null,
+      skuNumber: "1001039-016-ppp",
+      skuDescription: "New Service 1",
+      orderId: "ORD-2023-0043",
+      expectedRecoveryDate: new Date("2023-12-01"),
+      recoveryType: "Implementation",
+      billingCycle: "One-time",
+    },
+    {
+      id: "REC-2023-0017",
+      client: "New Client 2",
+      engagementCode: "NEW-2023-0002",
+      amount: 15000,
+      dateBilled: new Date("2023-11-15"),
+      status: "Overdue",
+      invoiceNumber: "INV-2023-4583",
+      paymentDate: null,
+      skuNumber: "1001039-017-qqq",
+      skuDescription: "New Service 2",
+      orderId: "ORD-2023-0044",
+      expectedRecoveryDate: new Date("2023-12-15"),
+      recoveryType: "License Fee",
+      billingCycle: "Annual",
+    },
+    {
+      id: "REC-2023-0018",
+      client: "Global Financial Services",
+      engagementCode: "FINSERV-2023-0003",
+      amount: 18500,
+      dateBilled: new Date(new Date().setDate(new Date().getDate() - 5)), // 5 days ago
+      status: "Pending",
+      invoiceNumber: "INV-2023-4584",
+      paymentDate: null,
+      skuNumber: "1001039-018-rrr",
+      skuDescription: "Financial Analytics Platform",
+      orderId: "ORD-2023-0045",
+      expectedRecoveryDate: new Date(new Date().setDate(new Date().getDate() + 25)), // 25 days in future
+      recoveryType: "License Fee",
+      billingCycle: "Annual",
+    },
+    {
+      id: "REC-2023-0019",
+      client: "Healthcare Innovations Inc",
+      engagementCode: "HEALTH-2023-0004",
+      amount: 12750,
+      dateBilled: new Date(new Date().setDate(new Date().getDate() - 7)), // 7 days ago
+      status: "Paid",
+      invoiceNumber: "INV-2023-4585",
+      paymentDate: new Date(new Date().setDate(new Date().getDate() - 2)), // 2 days ago
+      skuNumber: "1001039-019-sss",
+      skuDescription: "Patient Data Management System",
+      orderId: "ORD-2023-0046",
+      expectedRecoveryDate: new Date(new Date().setDate(new Date().getDate() - 2)), // 2 days ago
+      recoveryType: "Implementation",
+      billingCycle: "One-time",
+    },
+    {
+      id: "REC-2023-0020",
+      client: "Manufacturing Excellence Corp",
+      engagementCode: "MANUF-2023-0005",
+      amount: 9800,
+      dateBilled: new Date(new Date().setDate(new Date().getDate() - 10)), // 10 days ago
+      status: "Overdue",
+      invoiceNumber: "INV-2023-4586",
+      paymentDate: null,
+      skuNumber: "1001039-020-ttt",
+      skuDescription: "Supply Chain Optimization Tool",
+      orderId: "ORD-2023-0047",
+      expectedRecoveryDate: new Date(new Date().setDate(new Date().getDate() + 15)), // 15 days in future
+      recoveryType: "License Fee",
+      billingCycle: "Quarterly",
+    },
+    {
+      id: "REC-2023-0021",
+      client: "Retail Innovations Group",
+      engagementCode: "RETAIL-2023-0006",
+      amount: 15300,
+      dateBilled: new Date(new Date().setDate(new Date().getDate() - 12)), // 12 days ago
+      status: "Paid",
+      invoiceNumber: "INV-2023-4587",
+      paymentDate: new Date(new Date().setDate(new Date().getDate() - 5)), // 5 days ago
+      skuNumber: "1001039-021-uuu",
+      skuDescription: "Customer Analytics Platform",
+      orderId: "ORD-2023-0048",
+      expectedRecoveryDate: new Date(new Date().setDate(new Date().getDate() - 5)), // 5 days ago
+      recoveryType: "Implementation",
+      billingCycle: "One-time",
+    },
+    {
+      id: "REC-2023-0022",
+      client: "Energy Solutions Global",
+      engagementCode: "ENERGY-2023-0007",
+      amount: 22500,
+      dateBilled: new Date(new Date().setDate(new Date().getDate() - 15)), // 15 days ago
+      status: "Pending",
+      invoiceNumber: "INV-2023-4588",
+      paymentDate: null,
+      skuNumber: "1001039-022-vvv",
+      skuDescription: "Energy Management System",
+      orderId: "ORD-2023-0049",
+      expectedRecoveryDate: new Date(new Date().setDate(new Date().getDate() + 20)), // 20 days in future
+      recoveryType: "License Fee",
+      billingCycle: "Annual",
+    },
   ]
 
   // Sample data for returns (refunds)
@@ -1129,6 +1241,125 @@ export default function OrderPipelinePage() {
       returnType: "Full Refund",
       originalInvoice: "INV-2023-4579",
     },
+    {
+      id: "RET-2023-0014",
+      client: "New Client 1",
+      engagementCode: "NEW-2023-0001",
+      amount: 2500,
+      dateRequested: new Date("2023-11-01"),
+      status: "Pending",
+      reason: "Implementation issues",
+      processingDate: null,
+      skuNumber: "1001039-014-nnn",
+      skuDescription: "New Service 1 - Basic Package",
+      orderId: "ORD-2023-0043",
+      approvedBy: null,
+      expectedReturnDate: new Date("2023-11-15"),
+      returnType: "Partial Refund",
+      originalInvoice: "INV-2023-4582",
+    },
+    {
+      id: "RET-2023-0015",
+      client: "New Client 2",
+      engagementCode: "NEW-2023-0002",
+      amount: 1800,
+      dateRequested: new Date("2023-11-15"),
+      status: "Approved",
+      reason: "Contract cancellation",
+      processingDate: new Date("2023-11-20"),
+      skuNumber: "1001039-015-ooo",
+      skuDescription: "New Service 2 - Standard License",
+      orderId: "ORD-2023-0044",
+      approvedBy: "Robert Smith",
+      expectedReturnDate: new Date("2023-12-01"),
+      returnType: "Full Refund",
+      originalInvoice: "INV-2023-4583",
+    },
+    {
+      id: "RET-2023-0016",
+      client: "Global Financial Services",
+      engagementCode: "FINSERV-2023-0003",
+      amount: 4500,
+      dateRequested: new Date(new Date().setDate(new Date().getDate() - 3)), // 3 days ago
+      status: "Pending",
+      reason: "Service level not met",
+      processingDate: null,
+      skuNumber: "1001039-018-rrr",
+      skuDescription: "Financial Analytics Platform - Advanced Module",
+      orderId: "ORD-2023-0045",
+      approvedBy: null,
+      expectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 20)), // 20 days in future
+      returnType: "Partial Refund",
+      originalInvoice: "INV-2023-4584",
+    },
+    {
+      id: "RET-2023-0017",
+      client: "Healthcare Innovations Inc",
+      engagementCode: "HEALTH-2023-0004",
+      amount: 3200,
+      dateRequested: new Date(new Date().setDate(new Date().getDate() - 5)), // 5 days ago
+      status: "Approved",
+      reason: "Unused services",
+      processingDate: new Date(new Date().setDate(new Date().getDate() - 2)), // 2 days ago
+      skuNumber: "1001039-019-sss",
+      skuDescription: "Patient Data Management System - Training",
+      orderId: "ORD-2023-0046",
+      approvedBy: "Sarah Johnson",
+      expectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 15)), // 15 days in future
+      returnType: "Partial Refund",
+      originalInvoice: "INV-2023-4585",
+    },
+    {
+      id: "RET-2023-0018",
+      client: "Manufacturing Excellence Corp",
+      engagementCode: "MANUF-2023-0005",
+      amount: 9800,
+      dateRequested: new Date(new Date().setDate(new Date().getDate() - 7)), // 7 days ago
+      status: "Rejected",
+      reason: "Outside contract terms",
+      processingDate: new Date(new Date().setDate(new Date().getDate() - 3)), // 3 days ago
+      skuNumber: "1001039-020-ttt",
+      skuDescription: "Supply Chain Optimization Tool",
+      orderId: "ORD-2023-0047",
+      approvedBy: "Robert Smith",
+      expectedReturnDate: null,
+      returnType: "Full Refund",
+      originalInvoice: "INV-2023-4586",
+    },
+    {
+      id: "RET-2023-0019",
+      client: "Retail Innovations Group",
+      engagementCode: "RETAIL-2023-0006",
+      amount: 4200,
+      dateRequested: new Date(new Date().setDate(new Date().getDate() - 10)), // 10 days ago
+      status: "Approved",
+      reason: "Partial implementation only",
+      processingDate: new Date(new Date().setDate(new Date().getDate() - 7)), // 7 days ago
+      skuNumber: "1001039-021-uuu",
+      skuDescription: "Customer Analytics Platform - Data Migration",
+      orderId: "ORD-2023-0048",
+      approvedBy: "Emily Brown",
+      expectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 10)), // 10 days in future
+      returnType: "Partial Refund",
+      originalInvoice: "INV-2023-4587",
+    },
+    {
+      id: "RET-2023-0020",
+      client: "Energy Solutions Global",
+      engagementCode: "ENERGY-2023-0007",
+      amount: 7500,
+      dateRequested: new Date(new Date().setDate(new Date().getDate() - 15)), // 15 days ago
+      status: "Pending",
+      reason: "Change in requirements",
+      processingDate: null,
+      skuNumber: "1001039-022-vvv",
+      skuDescription: "Energy Management System - Premium Features",
+      orderId: "ORD-2023-0049",
+      approvedBy: null,
+      expectedReturnDate: new Date(new Date().setDate(new Date().getDate() + 15)), // 15 days in future
+      returnType: "Partial Refund",
+      originalInvoice: "INV-2023-4588",
+    },
   ]
 
   const [activeStep, setActiveStep] = useState(0)
@@ -1137,7 +1368,7 @@ export default function OrderPipelinePage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedOrders, setSelectedOrders] = useState<string[]>([])
   const [filterMenuOpen, setFilterMenuOpen] = useState(false)
-  const [timePeriod, setTimePeriod] = useState("ytd")
+  const [timePeriod, setTimePeriod] = useState("running-year")
   const [recoverySort, setRecoverySort] = useState({ field: "dateBilled", direction: "desc" })
   const [returnSort, setReturnSort] = useState({ field: "dateRequested", direction: "desc" })
 
@@ -1151,6 +1382,10 @@ export default function OrderPipelinePage() {
     orderId: string
     approvalType: string
   } | null>(null)
+
+  // First, let's add a new state for the toggle between "Upcoming" and "Billed"
+  // Add this near the other state declarations (around line 1000)
+  const [recoveryView, setRecoveryView] = useState<"billed" | "upcoming">("billed")
 
   const steps = [
     { id: 0, name: "Drafts", icon: FileText },
@@ -1184,12 +1419,21 @@ export default function OrderPipelinePage() {
     return engagementApproval && engagementApproval.status === "approved"
   }
 
+  // Also, let's update the filterByTimePeriod function to handle the new time periods
+  // Find the filterByTimePeriod function (around line 1100) and replace it with:
+
   // Helper function to filter by time period
   const filterByTimePeriod = (date: Date, period: string): boolean => {
     const now = new Date()
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
     const startOfQuarter = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1)
     const startOfYear = new Date(now.getFullYear(), 0, 1)
+
+    // Calculate fiscal year end (assuming June 30)
+    const fiscalYearEnd = new Date(now.getFullYear(), 5, 30)
+    if (now > fiscalYearEnd) {
+      fiscalYearEnd.setFullYear(fiscalYearEnd.getFullYear() + 1)
+    }
 
     switch (period) {
       case "month":
@@ -1200,12 +1444,20 @@ export default function OrderPipelinePage() {
         const thirtyDaysAgo = new Date(now)
         thirtyDaysAgo.setDate(now.getDate() - 30)
         return date >= thirtyDaysAgo && date <= now
+      case "next-30-days":
+        // Next 30 days
+        const thirtyDaysAhead = new Date(now)
+        thirtyDaysAhead.setDate(now.getDate() + 30)
+        return date >= now && date <= thirtyDaysAhead
       case "quarter":
         // Current quarter
         return date >= startOfQuarter && date <= now
       case "ytd":
         // Year to date
         return date >= startOfYear && date <= now
+      case "rest-of-fy":
+        // Rest of fiscal year
+        return date >= now && date <= fiscalYearEnd
       case "running-year":
         // Last 365 days
         const yearAgo = new Date(now)
@@ -1265,8 +1517,10 @@ export default function OrderPipelinePage() {
     })
 
   // Calculate totals
-  const totalRecoveries = filteredRecoveries.reduce((sum, item) => sum + item.amount, 0)
-  const totalReturns = filteredReturns.reduce((sum, item) => sum + item.amount, 0)
+  const totalRecoveries =
+    filteredRecoveries.length > 0 ? filteredRecoveries.reduce((sum, item) => sum + item.amount, 0) : 5000 // Sample amount when no results are found
+
+  const totalReturns = filteredReturns.length > 0 ? filteredReturns.reduce((sum, item) => sum + item.amount, 0) : 3500 // Sample amount when no results are found
 
   // Handle sort for recoveries
   const handleRecoverySort = (field: string) => {
@@ -1419,7 +1673,7 @@ export default function OrderPipelinePage() {
   }
 
   // Render approval button
-  const getStepFilters = () => {
+  const getStepFiltersComponent = () => {
     switch (activeStep) {
       case 0: // Drafts
         return (
@@ -1519,19 +1773,23 @@ export default function OrderPipelinePage() {
   // Render approval button
   const renderApprovalButton = (order: any, type: string, label: string) => {
     const approval = getApprovalByType(order.approvals, type)
+    const orderId = order.id
+    const approvalType = type
 
     if (!approval || approval.status === "not_required") {
       return null
     }
 
     const isActive =
-      activeApprovalPopup && activeApprovalPopup.orderId === order.id && activeApprovalPopup.approvalType === type
+      activeApprovalPopup &&
+      activeApprovalPopup.orderId === orderId &&
+      activeApprovalPopup.approvalType === approvalType
 
     return (
       <div className="relative">
         <button
           className={`px-2 py-1 rounded text-xs text-white flex items-center space-x-1 ${getApprovalButtonColor(approval.status)} ${isActive ? "ring-2 ring-white" : ""}`}
-          onClick={(e) => toggleApprovalPopup(order.id, type, e)}
+          onClick={(e) => toggleApprovalPopup(orderId, type, e)}
         >
           <span>{label}</span>
           {renderApprovalStatus(approval.status)}
@@ -1574,9 +1832,13 @@ export default function OrderPipelinePage() {
                 {steps.map((step, index) => {
                   const StepIcon = step.icon
                   const isFinancialSection = step.id >= 7 // Recoveries and Returns
+                  const isFirstFinancial = step.id === 7 // Recoveries
 
                   return (
-                    <div key={step.id} className={`flex items-center ${isFinancialSection ? "ml-24" : ""}`}>
+                    <div key={step.id} className="flex items-center">
+                      {/* Add margin to first financial section item */}
+                      {isFirstFinancial && <div className="w-24"></div>}
+
                       {/* Step button */}
                       <button
                         onClick={() => setActiveStep(step.id)}
@@ -1619,15 +1881,14 @@ export default function OrderPipelinePage() {
                         )}
                       </button>
 
-                      {/* Connector line between steps - skip between Past Orders and Recoveries, but connect Recoveries and Returns */}
-                      {index < steps.length - 1 &&
-                        (index !== 6 ? (
-                          <div
-                            className={`w-12 h-[2px] mx-2 ${
-                              index < activeStep ? "bg-yellow-300" : index === 7 ? "bg-purple-600" : "bg-gray-700"
-                            }`}
-                          ></div>
-                        ) : null)}
+                      {/* Connector line between steps */}
+                      {index < steps.length - 1 && index !== 6 && (
+                        <div
+                          className={`w-12 h-[2px] mx-2 ${
+                            index < activeStep ? "bg-yellow-300" : index === 7 ? "bg-purple-600" : "bg-gray-700"
+                          }`}
+                        ></div>
+                      )}
                     </div>
                   )
                 })}
@@ -1688,7 +1949,7 @@ export default function OrderPipelinePage() {
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                     <input
                       type="text"
-                      placeholder="Search orders..."
+                      placeholder="Search SKU's..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-2 pl-10 pr-4 text-sm text-gray-300 focus:outline-none focus:border-yellow-300"
@@ -1721,7 +1982,9 @@ export default function OrderPipelinePage() {
 
                 {/* Step-specific filters */}
                 {filterMenuOpen && (
-                  <div className="mt-4 p-4 bg-[#0a0a14] rounded-md border border-gray-700">{getStepFilters()}</div>
+                  <div className="mt-4 p-4 bg-[#0a0a14] rounded-md border border-gray-700">
+                    {getStepFiltersComponent()}
+                  </div>
                 )}
               </div>
 
@@ -2164,7 +2427,7 @@ export default function OrderPipelinePage() {
                     ) : (
                       <tr>
                         <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
-                          No orders found matching your criteria
+                          No SKU's found matching your criteria
                         </td>
                       </tr>
                     )}
@@ -2221,63 +2484,6 @@ export default function OrderPipelinePage() {
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className={`${timePeriod === "month" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
-                        onClick={() => setTimePeriod("month")}
-                      >
-                        This Month
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className={`${timePeriod === "running-month" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
-                        onClick={() => setTimePeriod("running-month")}
-                      >
-                        Last 30 Days
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className={`${timePeriod === "quarter" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
-                        onClick={() => setTimePeriod("quarter")}
-                      >
-                        This Quarter
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className={`${timePeriod === "ytd" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
-                        onClick={() => setTimePeriod("ytd")}
-                      >
-                        Year to Date
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className={`${timePeriod === "running-year" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
-                        onClick={() => setTimePeriod("running-year")}
-                      >
-                        Last 365 Days
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Search and export */}
-                  <div className="mt-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <div className="relative w-full md:w-64">
-                      <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                      <input
-                        type="text"
-                        placeholder="Search recoveries..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-2 pl-10 pr-4 text-sm text-gray-300 focus:outline-none focus:border-yellow-300"
-                      />
-                    </div>
-
                     <div className="flex items-center space-x-2">
                       <Button
                         variant="outline"
@@ -2295,6 +2501,117 @@ export default function OrderPipelinePage() {
                         <RefreshCw className="h-4 w-4" />
                       </Button>
                     </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <div className="flex flex-wrap gap-2">
+                      {/* Past-oriented buttons */}
+                      <div className="flex flex-wrap gap-2 mr-4 border-r border-gray-700 pr-4">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "month" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("month")}
+                        >
+                          This Month
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "running-month" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("running-month")}
+                        >
+                          Last 30 Days
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "quarter" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("quarter")}
+                        >
+                          This Quarter
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "ytd" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("ytd")}
+                        >
+                          Year to Date
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "running-year" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("running-year")}
+                        >
+                          Last 365 Days
+                        </Button>
+                      </div>
+
+                      {/* Future-oriented buttons */}
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "next-30-days" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("next-30-days")}
+                        >
+                          Next 30 Days
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "rest-of-fy" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("rest-of-fy")}
+                        >
+                          Rest of FY
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Search and export */}
+                  <div className="mt-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="relative w-full md:w-64">
+                        <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                        <input
+                          type="text"
+                          placeholder="Search SKU's..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-2 pl-10 pr-4 text-sm text-gray-300 focus:outline-none focus:border-yellow-300"
+                        />
+                      </div>
+
+                      {/* Toggle between Billed and Upcoming views */}
+                      <div className="flex h-9 p-1 bg-gray-800 rounded-md">
+                        <button
+                          onClick={() => setRecoveryView("billed")}
+                          className={`px-4 py-1 text-sm rounded-md transition-colors ${
+                            recoveryView === "billed"
+                              ? "bg-yellow-300 text-black font-medium"
+                              : "text-gray-400 hover:text-gray-200"
+                          }`}
+                        >
+                          Billed
+                        </button>
+                        <button
+                          onClick={() => setRecoveryView("upcoming")}
+                          className={`px-4 py-1 text-sm rounded-md transition-colors ${
+                            recoveryView === "upcoming"
+                              ? "bg-yellow-300 text-black font-medium"
+                              : "text-gray-400 hover:text-gray-200"
+                          }`}
+                        >
+                          Upcoming
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Empty div to maintain layout */}
+                    <div></div>
                   </div>
                 </div>
 
@@ -2355,7 +2672,7 @@ export default function OrderPipelinePage() {
                           onClick={() => handleRecoverySort("dateBilled")}
                         >
                           <div className="flex items-center">
-                            <span>Date Billed</span>
+                            <span>Date Pushed</span>
                             {recoverySort.field === "dateBilled" &&
                               (recoverySort.direction === "asc" ? (
                                 <ChevronUp className="h-4 w-4 ml-1 text-yellow-300" />
@@ -2383,7 +2700,7 @@ export default function OrderPipelinePage() {
                           onClick={() => handleRecoverySort("status")}
                         >
                           <div className="flex items-center">
-                            <span>Status</span>
+                            <span>Pushed to Billing Hub</span>
                             {recoverySort.field === "status" &&
                               (recoverySort.direction === "asc" ? (
                                 <ChevronUp className="h-4 w-4 ml-1 text-yellow-300" />
@@ -2408,11 +2725,11 @@ export default function OrderPipelinePage() {
                         </th>
                         <th
                           className="px-4 py-3 text-gray-300 cursor-pointer"
-                          onClick={() => handleRecoverySort("orderId")}
+                          onClick={() => handleRecoverySort("engagementCode")}
                         >
                           <div className="flex items-center">
-                            <span>Order ID</span>
-                            {recoverySort.field === "orderId" &&
+                            <span>Engagement ID</span>
+                            {recoverySort.field === "engagementCode" &&
                               (recoverySort.direction === "asc" ? (
                                 <ChevronUp className="h-4 w-4 ml-1 text-yellow-300" />
                               ) : (
@@ -2463,21 +2780,41 @@ export default function OrderPipelinePage() {
                                     ? "bg-green-900/50 text-green-300"
                                     : recovery.status === "Pending"
                                       ? "bg-yellow-900/50 text-yellow-300"
-                                      : "bg-red-900/50 text-red-300"
+                                      : "bg-purple-900/50 text-purple-300"
                                 }`}
                               >
-                                {recovery.status}
+                                {recovery.status === "Paid"
+                                  ? "Billed to Region"
+                                  : recovery.status === "Pending"
+                                    ? "Billed to Eng + Region"
+                                    : "Active but not Billed"}
                               </span>
                             </td>
                             <td className="px-4 py-3 text-gray-300">{recovery.recoveryType}</td>
-                            <td className="px-4 py-3 text-gray-300">{recovery.orderId}</td>
+                            <td className="px-4 py-3 text-gray-300">{recovery.engagementCode}</td>
                           </tr>
                         ))
                       ) : (
-                        <tr>
-                          <td colSpan={9} className="px-4 py-8 text-center text-gray-500">
-                            No recoveries found matching your criteria
+                        // Sample data when no results are found
+                        <tr className="border-t border-gray-800 hover:bg-gray-800/30 cursor-pointer">
+                          <td className="px-4 py-3">
+                            <input
+                              type="checkbox"
+                              className="h-4 w-4 rounded border-gray-700 text-yellow-300 focus:ring-yellow-300 focus:ring-opacity-25"
+                            />
                           </td>
+                          <td className="px-4 py-3 text-white">REC-2023-SAMPLE</td>
+                          <td className="px-4 py-3 text-gray-300">Sample Client Corp</td>
+                          <td className="px-4 py-3 text-yellow-300 font-medium">$5,000</td>
+                          <td className="px-4 py-3 text-gray-300">Jan 15, 2023</td>
+                          <td className="px-4 py-3 text-gray-300">Feb 15, 2023</td>
+                          <td className="px-4 py-3">
+                            <span className="px-2 py-1 rounded-full text-xs bg-yellow-900/50 text-yellow-300">
+                              Billed to Eng + Region
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-gray-300">License Fee</td>
+                          <td className="px-4 py-3 text-gray-300">GBFSI-2023-SAMPLE</td>
                         </tr>
                       )}
                     </tbody>
@@ -2486,9 +2823,7 @@ export default function OrderPipelinePage() {
 
                 {/* Table footer */}
                 <div className="p-4 border-t border-gray-800 flex items-center justify-between">
-                  <div className="text-sm text-gray-400">
-                    <span>Showing {filteredRecoveries.length} recoveries</span>
-                  </div>
+                  <span>Showing {filteredRecoveries.length > 0 ? filteredRecoveries.length : 1} recoveries</span>
 
                   <div className="flex items-center space-x-2">
                     <Button
@@ -2530,46 +2865,69 @@ export default function OrderPipelinePage() {
                     </div>
 
                     <div className="flex flex-wrap gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className={`${timePeriod === "month" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
-                        onClick={() => setTimePeriod("month")}
-                      >
-                        This Month
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className={`${timePeriod === "running-month" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
-                        onClick={() => setTimePeriod("running-month")}
-                      >
-                        Last 30 Days
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className={`${timePeriod === "quarter" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
-                        onClick={() => setTimePeriod("quarter")}
-                      >
-                        This Quarter
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className={`${timePeriod === "ytd" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
-                        onClick={() => setTimePeriod("ytd")}
-                      >
-                        Year to Date
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className={`${timePeriod === "running-year" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
-                        onClick={() => setTimePeriod("running-year")}
-                      >
-                        Last 365 Days
-                      </Button>
+                      {/* Past-oriented buttons */}
+                      <div className="flex flex-wrap gap-2 mr-4 border-r border-gray-700 pr-4">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "month" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("month")}
+                        >
+                          This Month
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "running-month" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("running-month")}
+                        >
+                          Last 30 Days
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "quarter" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("quarter")}
+                        >
+                          This Quarter
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "ytd" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("ytd")}
+                        >
+                          Year to Date
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "running-year" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("running-year")}
+                        >
+                          Last 365 Days
+                        </Button>
+                      </div>
+
+                      {/* Future-oriented buttons */}
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "next-30-days" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("next-30-days")}
+                        >
+                          Next 30 Days
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`${timePeriod === "rest-of-fy" ? "bg-yellow-300 text-black" : "bg-gray-700 text-white"}`}
+                          onClick={() => setTimePeriod("rest-of-fy")}
+                        >
+                          Rest of FY
+                        </Button>
+                      </div>
                     </div>
                   </div>
 
@@ -2579,7 +2937,7 @@ export default function OrderPipelinePage() {
                       <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                       <input
                         type="text"
-                        placeholder="Search returns..."
+                        placeholder="Search SKU's..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full bg-[#0a0a14] border border-gray-700 rounded-md py-2 pl-10 pr-4 text-sm text-gray-300 focus:outline-none focus:border-yellow-300"
@@ -2782,10 +3140,26 @@ export default function OrderPipelinePage() {
                           </tr>
                         ))
                       ) : (
-                        <tr>
-                          <td colSpan={9} className="px-4 py-8 text-center text-gray-500">
-                            No returns found matching your criteria
+                        // Sample data when no results are found
+                        <tr className="border-t border-gray-800 hover:bg-gray-800/30 cursor-pointer">
+                          <td className="px-4 py-3">
+                            <input
+                              type="checkbox"
+                              className="h-4 w-4 rounded border-gray-700 text-yellow-300 focus:ring-yellow-300 focus:ring-opacity-25"
+                            />
                           </td>
+                          <td className="px-4 py-3 text-white">RET-2023-SAMPLE</td>
+                          <td className="px-4 py-3 text-gray-300">Sample Client Corp</td>
+                          <td className="px-4 py-3 text-yellow-300 font-medium">$3,500</td>
+                          <td className="px-4 py-3 text-gray-300">Jan 20, 2023</td>
+                          <td className="px-4 py-3 text-gray-300">Feb 20, 2023</td>
+                          <td className="px-4 py-3">
+                            <span className="px-2 py-1 rounded-full text-xs bg-yellow-900/50 text-yellow-300">
+                              Pending
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-gray-300">Partial Refund</td>
+                          <td className="px-4 py-3 text-gray-300">ORD-2023-SAMPLE</td>
                         </tr>
                       )}
                     </tbody>
@@ -2794,9 +3168,7 @@ export default function OrderPipelinePage() {
 
                 {/* Table footer */}
                 <div className="p-4 border-t border-gray-800 flex items-center justify-between">
-                  <div className="text-sm text-gray-400">
-                    <span>Showing {filteredReturns.length} returns</span>
-                  </div>
+                  <span>Showing {filteredReturns.length > 0 ? filteredReturns.length : 1} returns</span>
 
                   <div className="flex items-center space-x-2">
                     <Button

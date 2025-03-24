@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { ChevronDown, ShoppingCart, Info } from "lucide-react"
+import { ChevronDown, ShoppingCart, Info, LinkIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -46,6 +46,28 @@ const skuInfoData = {
     minIncrements: 40,
     incrementPeriod: "One Time",
   },
+  "option-4": {
+    id: "CT-EYSTAT-SUPP01",
+    name: "Support Package",
+    description:
+      "The Support Package provides comprehensive assistance for your STAT implementation with 24/7 technical support, a dedicated support manager, quarterly system health checks, priority issue resolution, and regular maintenance updates. This ensures your system runs smoothly and efficiently, minimizing downtime and maximizing productivity. Our support team is highly trained in all aspects of the STAT system and can provide guidance on best practices, troubleshooting, and optimization.",
+    returnable: true,
+    status: "Active for Engagement Billing",
+    type: "Fixed",
+    minIncrements: 1,
+    incrementPeriod: "Monthly",
+  },
+  "option-5": {
+    id: "CT-EYSTAT-DEPL01",
+    name: "Deployment Labour Bundle",
+    description:
+      "The Deployment Labour Bundle includes professional services to implement and configure STAT according to your organization's specific needs. Our expert team will handle initial system setup and configuration, data migration from existing systems, integration with your current infrastructure, comprehensive user training and onboarding, and post-deployment optimization to ensure you get the maximum value from your STAT implementation.",
+    returnable: false,
+    status: "Active for Regional Billing Only",
+    type: "Hours",
+    minIncrements: 40,
+    incrementPeriod: "One Time",
+  },
 }
 
 export function ProductDetails() {
@@ -60,6 +82,8 @@ export function ProductDetails() {
     "option-1": 5, // Initialize with minimum values from skuInfoData
     "option-2": 1,
     "option-3": 40,
+    "option-4": 1,
+    "option-5": 40,
   })
 
   // Add a function to handle increment changes
@@ -118,17 +142,50 @@ export function ProductDetails() {
     }
   }
 
-  // Toggle SKU selection
+  // Toggle SKU selection with dependency handling
   const toggleSkuSelection = (skuId: string) => {
     setSelectedSkus((prev) => {
+      // Create a new array to avoid direct state mutation
+      let newSelection = [...prev]
+
       // If already selected, remove it
-      if (prev.includes(skuId)) {
-        return prev.filter((id) => id !== skuId)
+      if (newSelection.includes(skuId)) {
+        // If deselecting Multi-Tenant or Single-Tenant, check if we should also deselect Setup
+        if (skuId === "option-1" || skuId === "option-2") {
+          // Only remove setup if neither tenant option is selected
+          const otherTenantSelected =
+            (skuId === "option-1" && newSelection.includes("option-2")) ||
+            (skuId === "option-2" && newSelection.includes("option-1"))
+
+          if (!otherTenantSelected) {
+            // Remove setup cost as well
+            newSelection = newSelection.filter((id) => id !== "option-3" && id !== skuId)
+          } else {
+            // Just remove the clicked option
+            newSelection = newSelection.filter((id) => id !== skuId)
+          }
+        } else if (skuId !== "option-3") {
+          // Don't allow manual deselection of setup if it's a dependency
+          // For other options, just remove them
+          newSelection = newSelection.filter((id) => id !== skuId)
+        }
       }
       // Otherwise add it
       else {
-        return [...prev, skuId]
+        // If selecting Multi-Tenant or Single-Tenant, also select Setup
+        if (skuId === "option-1" || skuId === "option-2") {
+          // Add setup cost if not already selected
+          if (!newSelection.includes("option-3")) {
+            newSelection.push("option-3")
+          }
+          newSelection.push(skuId)
+        } else if (skuId !== "option-3") {
+          // Don't allow manual selection of setup
+          newSelection.push(skuId)
+        }
       }
+
+      return newSelection
     })
   }
 
@@ -491,7 +548,16 @@ export function ProductDetails() {
                       <td className="px-3 py-4 text-gray-300 w-16 whitespace-nowrap overflow-hidden text-ellipsis">
                         1001039-003-ccc
                       </td>
-                      <td className="pl-16 py-4 text-gray-300">CT-EYSTAT-SETUP01</td>
+                      <td className="pl-16 py-4 text-gray-300 flex items-center">
+                        CT-EYSTAT-SETUP01
+                        <span
+                          className="ml-2 flex items-center text-yellow-300 text-xs"
+                          title="Required with tenant options"
+                        >
+                          <LinkIcon className="h-3 w-3 mr-1" />
+                          Required with tenant
+                        </span>
+                      </td>
                       <td className="px-3 py-4 text-gray-300">$5000</td>
                       <td className="px-3 py-4 text-gray-300">Fixed, One Time</td>
                       <td className="px-3 py-4 text-gray-300">
@@ -499,19 +565,111 @@ export function ProductDetails() {
                       </td>
                       <td className="px-3 py-4 text-gray-300">One Time</td>
                       <td className="px-3 py-4 text-center">
-                        <button
-                          onClick={() => toggleSkuSelection("option-3")}
-                          className={`h-5 w-5 rounded-full border ${selectedSkus.includes("option-3") ? "border-yellow-300" : "border-gray-500"} flex items-center justify-center`}
+                        <div
+                          className={`h-5 w-5 rounded-full border ${
+                            selectedSkus.includes("option-3")
+                              ? "border-yellow-300 bg-gray-700/50"
+                              : "border-gray-500 bg-gray-700/30 cursor-not-allowed"
+                          } flex items-center justify-center relative`}
+                          title="Automatically selected with tenant options"
                         >
                           {selectedSkus.includes("option-3") && (
                             <div className="h-2.5 w-2.5 rounded-full bg-yellow-300"></div>
                           )}
-                        </button>
+                          {/* Add a small link icon to indicate this is linked to other selections */}
+                          <span className="absolute -top-1 -right-1 text-xs text-yellow-300">
+                            <LinkIcon className="h-3 w-3" />
+                          </span>
+                        </div>
                       </td>
                       <td
                         className={`px-3 py-4 ${selectedSkus.includes("option-3") ? "text-yellow-300" : "text-gray-300"}`}
                       >
                         One-time Setup Cost
+                      </td>
+                    </tr>
+                    <tr className="border-t border-gray-800">
+                      <td className="px-3 py-4 align-middle">
+                        <button
+                          className="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs bg-[rgb(255,230,0)] text-black hover:bg-yellow-400 focus:outline-none"
+                          onClick={(e) => openSkuInfo("option-4", e)}
+                        >
+                          <Info className="h-3 w-3 mr-1" />
+                          INFO
+                        </button>
+                      </td>
+                      <td className="px-3 py-4 text-gray-300 w-16 whitespace-nowrap overflow-hidden text-ellipsis">
+                        1001039-004-ddd
+                      </td>
+                      <td className="pl-16 py-4 text-gray-300">CT-EYSTAT-SUPP01</td>
+                      <td className="px-3 py-4 text-gray-300">$800</td>
+                      <td className="px-3 py-4 text-gray-300">Fixed Monthly Charge</td>
+                      <td className="px-3 py-4 text-gray-300">
+                        <input
+                          type="number"
+                          min={skuInfoData["option-4"].minIncrements}
+                          value={incrementValues["option-4"]}
+                          onChange={(e) => handleIncrementChange("option-4", e.target.value)}
+                          className="w-16 bg-[#0a0a14] border border-gray-700 rounded px-2 py-1 text-white text-center"
+                        />
+                      </td>
+                      <td className="px-3 py-4 text-gray-300">Monthly</td>
+                      <td className="px-3 py-4 text-center">
+                        <button
+                          onClick={() => toggleSkuSelection("option-4")}
+                          className={`h-5 w-5 rounded-full border ${selectedSkus.includes("option-4") ? "border-yellow-300" : "border-gray-500"} flex items-center justify-center`}
+                        >
+                          {selectedSkus.includes("option-4") && (
+                            <div className="h-2.5 w-2.5 rounded-full bg-yellow-300"></div>
+                          )}
+                        </button>
+                      </td>
+                      <td
+                        className={`px-3 py-4 ${selectedSkus.includes("option-4") ? "text-yellow-300" : "text-gray-300"}`}
+                      >
+                        Support Package
+                      </td>
+                    </tr>
+                    <tr className="border-t border-gray-800">
+                      <td className="px-3 py-4 align-middle">
+                        <button
+                          className="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs bg-[rgb(255,230,0)] text-black hover:bg-yellow-400 focus:outline-none"
+                          onClick={(e) => openSkuInfo("option-5", e)}
+                        >
+                          <Info className="h-3 w-3 mr-1" />
+                          INFO
+                        </button>
+                      </td>
+                      <td className="px-3 py-4 text-gray-300 w-16 whitespace-nowrap overflow-hidden text-ellipsis">
+                        1001039-005-eee
+                      </td>
+                      <td className="pl-16 py-4 text-gray-300">CT-EYSTAT-DEPL01</td>
+                      <td className="px-3 py-4 text-gray-300">$150/hour</td>
+                      <td className="px-3 py-4 text-gray-300">Hours, One Time</td>
+                      <td className="px-3 py-4 text-gray-300">
+                        <input
+                          type="number"
+                          min={skuInfoData["option-5"].minIncrements}
+                          value={incrementValues["option-5"]}
+                          onChange={(e) => handleIncrementChange("option-5", e.target.value)}
+                          className="w-16 bg-[#0a0a14] border border-gray-700 rounded px-2 py-1 text-white text-center"
+                        />
+                      </td>
+                      <td className="px-3 py-4 text-gray-300">One Time</td>
+                      <td className="px-3 py-4 text-center">
+                        <button
+                          onClick={() => toggleSkuSelection("option-5")}
+                          className={`h-5 w-5 rounded-full border ${selectedSkus.includes("option-5") ? "border-yellow-300" : "border-gray-500"} flex items-center justify-center`}
+                        >
+                          {selectedSkus.includes("option-5") && (
+                            <div className="h-2.5 w-2.5 rounded-full bg-yellow-300"></div>
+                          )}
+                        </button>
+                      </td>
+                      <td
+                        className={`px-3 py-4 ${selectedSkus.includes("option-5") ? "text-yellow-300" : "text-gray-300"}`}
+                      >
+                        Deployment Labour Bundle
                       </td>
                     </tr>
                   </tbody>
@@ -566,6 +724,32 @@ export function ProductDetails() {
                 <li>• Enhanced security features</li>
                 <li>• Priority support</li>
                 <li>• Custom integration options</li>
+              </ul>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg">
+              <h3 className="text-xl font-semibold mb-3">Support Package</h3>
+              <p className="text-gray-300 mb-4">
+                Comprehensive support options to ensure your STAT implementation runs smoothly and efficiently.
+              </p>
+              <ul className="space-y-2 text-gray-300">
+                <li>• 24/7 technical assistance</li>
+                <li>• Dedicated support manager</li>
+                <li>• Quarterly system health checks</li>
+                <li>• Priority issue resolution</li>
+                <li>• Regular maintenance updates</li>
+              </ul>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg">
+              <h3 className="text-xl font-semibold mb-3">Deployment Labour Bundle</h3>
+              <p className="text-gray-300 mb-4">
+                Professional services to implement and configure STAT according to your organization's specific needs.
+              </p>
+              <ul className="space-y-2 text-gray-300">
+                <li>• Initial system setup and configuration</li>
+                <li>• Data migration from existing systems</li>
+                <li>• Integration with your current infrastructure</li>
+                <li>• User training and onboarding</li>
+                <li>• Post-deployment optimization</li>
               </ul>
             </div>
           </div>
