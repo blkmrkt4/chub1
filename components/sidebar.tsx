@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Home, ShoppingBag, User, FileText, ShoppingCart, Database, Edit, ChevronRight } from "lucide-react"
+import { ShoppingBag, User, FileText, ShoppingCart, Database } from "lucide-react"
 
 export function Sidebar() {
   return (
@@ -9,22 +9,13 @@ export function Sidebar() {
           <ul className="space-y-1">
             <li>
               <Link href="/" className="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white">
-                <Home className="h-5 w-5 mr-3" />
-                <span>Home</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/ct-marketplace"
-                className="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white"
-              >
                 <ShoppingBag className="h-5 w-5 mr-3" />
                 <span>CT Marketplace</span>
               </Link>
             </li>
             <li>
               <Link
-                href="/my-marketplace"
+                href="/my-workspace"
                 className="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white"
               >
                 <User className="h-5 w-5 mr-3" />
@@ -51,7 +42,7 @@ export function Sidebar() {
             </li>
             <li>
               <Link
-                href="/cart"
+                href="/order-bundle"
                 className="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white"
               >
                 <ShoppingCart className="h-5 w-5 mr-3" />
@@ -75,19 +66,6 @@ export function Sidebar() {
               >
                 <Database className="h-5 w-5 mr-3" />
                 <span>SKU Database</span>
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                href="/edit-skus"
-                className="flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white"
-              >
-                <div className="flex items-center">
-                  <Edit className="h-5 w-5 mr-3" />
-                  <span>Edit these SKUs</span>
-                </div>
-                <ChevronRight className="h-4 w-4" />
               </Link>
             </li>
           </ul>

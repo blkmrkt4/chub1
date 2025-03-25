@@ -4,12 +4,13 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { ChevronDown, ShoppingCart, Info, LinkIcon } from "lucide-react"
+import { ChevronDown, ShoppingCart, Info, LinkIcon, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { OrderBundlePanel } from "@/components/order-bundle-panel"
 import { SKUInfoDialog } from "@/components/sku-info-dialog"
+import { useRouter } from "next/navigation"
 
 // Sample SKU data
 const skuInfoData = {
@@ -76,6 +77,7 @@ export function ProductDetails() {
   const [isOrderBundleOpen, setIsOrderBundleOpen] = useState(false)
   const [selectedSkus, setSelectedSkus] = useState<string[]>(["option-2"]) // Default to the middle option
   const [activeInfoDialog, setActiveInfoDialog] = useState<string | null>(null)
+  const router = useRouter()
 
   // Add a new state to track increment values for each SKU
   const [incrementValues, setIncrementValues] = useState<Record<string, number>>({
@@ -231,10 +233,6 @@ export function ProductDetails() {
           {/* Breadcrumb */}
           <div className="flex items-center text-sm text-gray-400 mb-6">
             <Link href="/" className="hover:text-white">
-              Home
-            </Link>
-            <span className="mx-2">/</span>
-            <Link href="/ct-marketplace" className="hover:text-white">
               CT Marketplace
             </Link>
             <span className="mx-2">/</span>
@@ -368,6 +366,22 @@ export function ProductDetails() {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Scroll to Contacts section</p>
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => router.push("/sku-database?product=STAT")}
+                      className="px-6 py-4 text-black bg-yellow-300 hover:bg-yellow-400 focus:outline-none whitespace-nowrap group relative flex items-center"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Start Estimate
+                      <span className="absolute inset-x-0 bottom-0 h-1 bg-black/20 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Create a new estimate for this product</p>
                   </TooltipContent>
                 </Tooltip>
               </div>

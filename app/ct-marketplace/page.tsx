@@ -63,6 +63,22 @@ export default function CTMarketplacePage() {
     }
   }
 
+  // Function to handle navigation based on product name
+  const handleStartEstimate = (productName: string) => {
+    // Map product names to their respective routes
+    const productRouteMap: Record<string, string> = {
+      "Strategic Transaction Accounting Tool": "/ct-marketplace/strategic-transaction-accounting-tool",
+      "Data Analytics Platform": "/ct-marketplace/data-analytics-platform",
+      "Cloud Security Services": "/ct-marketplace/cloud-security-services",
+      "AI Development Framework": "/ct-marketplace/ai-development-framework",
+      // Add mappings for other products as needed
+    }
+
+    // Navigate to the appropriate route or default to CT Marketplace
+    const route = productRouteMap[productName] || "/ct-marketplace"
+    router.push(route)
+  }
+
   return (
     <div className="min-h-screen bg-[#0a0a14] text-white">
       {/* Header */}
@@ -444,7 +460,7 @@ export default function CTMarketplacePage() {
                     View more
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => handleStartEstimate("Strategic Transaction Accounting Tool")}
                     className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
                   >
                     Start Estimate
@@ -469,7 +485,7 @@ export default function CTMarketplacePage() {
                     View more
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => handleStartEstimate("Data Analytics Platform")}
                     className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
                   >
                     Start Estimate
@@ -494,7 +510,7 @@ export default function CTMarketplacePage() {
                     View more
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => handleStartEstimate("Cloud Security Services")}
                     className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
                   >
                     Start Estimate
@@ -521,7 +537,7 @@ export default function CTMarketplacePage() {
                     View more
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => handleStartEstimate("AI Development Framework")}
                     className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
                   >
                     Start Estimate
@@ -546,7 +562,7 @@ export default function CTMarketplacePage() {
                     View more
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => router.push("/sku-database")}
                     className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
                   >
                     Start Estimate
@@ -571,7 +587,7 @@ export default function CTMarketplacePage() {
                     View more
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => router.push("/sku-database")}
                     className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
                   >
                     Start Estimate
@@ -598,7 +614,7 @@ export default function CTMarketplacePage() {
                     View more
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => router.push("/sku-database")}
                     className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
                   >
                     Start Estimate
@@ -622,7 +638,7 @@ export default function CTMarketplacePage() {
                     View more
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => router.push("/sku-database")}
                     className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
                   >
                     Start Estimate
@@ -662,7 +678,7 @@ export default function CTMarketplacePage() {
                     View more
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => router.push("/sku-database")}
                     className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
                   >
                     Start Estimate
@@ -686,7 +702,7 @@ export default function CTMarketplacePage() {
                     View more
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => router.push("/sku-database")}
                     className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
                   >
                     Start Estimate
@@ -710,7 +726,7 @@ export default function CTMarketplacePage() {
                     View more
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => router.push("/sku-database")}
                     className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
                   >
                     Start Estimate
@@ -736,7 +752,7 @@ export default function CTMarketplacePage() {
                     View more
                   </button>
                   <button
-                    onClick={() => router.push("/")}
+                    onClick={() => router.push("/sku-database")}
                     className="text-sm bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors"
                   >
                     Start Estimate

@@ -1,0 +1,645 @@
+"use client"
+
+import type React from "react"
+
+import { useState } from "react"
+import { Info, ShoppingCart, LinkIcon } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { OrderBundlePanel } from "@/components/order-bundle-panel"
+import { SKUInfoDialog } from "@/components/sku-info-dialog"
+import { Sidebar } from "@/components/sidebar"
+
+// Sample SKU data
+const skuInfoData = {
+  "option-1": {
+    id: "CT-EYSTAT-MT01",
+    name: "Multi Tenant",
+    description:
+      "The Multi-Tenant solution for EY STAT provides a cost-effective way to leverage our Strategic Transaction Accounting Tool. This shared infrastructure model maintains strict data isolation between clients while offering all core functionalities needed for transaction accounting. The solution includes our standard support package with regular updates to ensure you always have access to the latest features and compliance requirements. Ideal for small to medium businesses that need powerful accounting tools without the overhead of dedicated infrastructure.",
+    returnable: true,
+    status: "Active for Engagement Billing",
+    type: "GigaBytes",
+    minIncrements: 5,
+    incrementPeriod: "Monthly",
+  },
+  "option-2": {
+    id: "CT-EYSTAT-STSM02",
+    name: "Single Tenant Small/Medium",
+    description:
+      "The Single-Tenant Small/Medium solution provides dedicated infrastructure for organizations requiring enhanced security, customization options, and performance. This package includes priority support with faster response times and a dedicated account manager to help with any issues. The dedicated environment allows for more extensive customization to meet specific business requirements and integration with your existing systems. This option is recommended for medium-sized organizations with complex transaction accounting needs or those in regulated industries with specific compliance requirements.",
+    returnable: false,
+    status: "Active for Regional Billing Only",
+    type: "Fixed",
+    minIncrements: 1,
+    incrementPeriod: "Monthly",
+  },
+  "option-3": {
+    id: "CT-EYSTAT-SETUP01",
+    name: "One-time Setup Cost",
+    description:
+      "The One-time Setup Cost covers the initial implementation, configuration, and deployment of the Strategic Transaction Accounting Tool in your environment. This includes data migration assistance, initial user setup, and configuration of the system to match your specific accounting workflows and requirements. Our implementation team will work closely with your stakeholders to ensure a smooth transition and proper knowledge transfer. This is a mandatory one-time fee for all new implementations regardless of which tenant option you select.",
+    returnable: false,
+    status: "Active but not billed",
+    type: "Hours",
+    minIncrements: 40,
+    incrementPeriod: "One Time",
+  },
+  "option-4": {
+    id: "CT-EYSTAT-SUPP01",
+    name: "Support Package",
+    description:
+      "The Support Package provides comprehensive assistance for your STAT implementation with 24/7 technical support, a dedicated support manager, quarterly system health checks, priority issue resolution, and regular maintenance updates. This ensures your system runs smoothly and efficiently, minimizing downtime and maximizing productivity. Our support team is highly trained in all aspects of the STAT system and can provide guidance on best practices, troubleshooting, and optimization.",
+    returnable: true,
+    status: "Active for Engagement Billing",
+    type: "Fixed",
+    minIncrements: 1,
+    incrementPeriod: "Monthly",
+  },
+  "option-5": {
+    id: "CT-EYSTAT-DEPL01",
+    name: "Deployment Labour Bundle",
+    description:
+      "The Deployment Labour Bundle includes professional services to implement and configure STAT according to your organization's specific needs. Our expert team will handle initial system setup and configuration, data migration from existing systems, integration with your current infrastructure, comprehensive user training and onboarding, and post-deployment optimization to ensure you get the maximum value from your STAT implementation.",
+    returnable: false,
+    status: "Active for Regional Billing Only",
+    type: "Hours",
+    minIncrements: 40,
+    incrementPeriod: "One Time",
+  },
+}
+
+export default function FixedNavigationPage() {
+  const [activeTab, setActiveTab] = useState("description")
+  const [isOrderBundleOpen, setIsOrderBundleOpen] = useState(false)
+  const [selectedSkus, setSelectedSkus] = useState<string[]>(["option-2"]) // Default to the middle option
+  const [activeInfoDialog, setActiveInfoDialog] = useState<string | null>(null)
+
+  // Add a new state to track increment values for each SKU
+  const [incrementValues, setIncrementValues] = useState<Record<string, number>>({
+    "option-1": 5, // Initialize with minimum values from skuInfoData
+    "option-2": 1,
+    "option-3": 40,
+    "option-4": 1,
+    "option-5": 40,
+  })
+
+  // Add a function to handle increment changes
+  const handleIncrementChange = (skuId: string, value: string) => {
+    const numValue = Number.parseInt(value, 10)
+    const minValue = skuInfoData[skuId as keyof typeof skuInfoData].minIncrements
+
+    // Ensure the value is not less than the minimum
+    if (!isNaN(numValue) && numValue >= minValue) {
+      setIncrementValues((prev) => ({
+        ...prev,
+        [skuId]: numValue,
+      }))
+    }
+  }
+
+  // Toggle SKU selection with dependency handling
+  const toggleSkuSelection = (skuId: string) => {
+    setSelectedSkus((prev) => {
+      // Create a new array to avoid direct state mutation
+      let newSelection = [...prev]
+
+      // If already selected, remove it
+      if (newSelection.includes(skuId)) {
+        // If deselecting Multi-Tenant or Single-Tenant, check if we should also deselect Setup
+        if (skuId === "option-1" || skuId === "option-2") {
+          // Only remove setup if neither tenant option is selected
+          const otherTenantSelected =
+            (skuId === "option-1" && newSelection.includes("option-2")) ||
+            (skuId === "option-2" && newSelection.includes("option-1"))
+
+          if (!otherTenantSelected) {
+            // Remove setup cost as well
+            newSelection = newSelection.filter((id) => id !== "option-3" && id !== skuId)
+          } else {
+            // Just remove the clicked option
+            newSelection = newSelection.filter((id) => id !== skuId)
+          }
+        } else if (skuId !== "option-3") {
+          // Don't allow manual deselection of setup if it's a dependency
+          // For other options, just remove them
+          newSelection = newSelection.filter((id) => id !== skuId)
+        }
+      }
+      // Otherwise add it
+      else {
+        // If selecting Multi-Tenant or Single-Tenant, also select Setup
+        if (skuId === "option-1" || skuId === "option-2") {
+          // Add setup cost if not already selected
+          if (!newSelection.includes("option-3")) {
+            newSelection.push("option-3")
+          }
+          newSelection.push(skuId)
+        } else if (skuId !== "option-3") {
+          // Don't allow manual selection of setup
+          newSelection.push(skuId)
+        }
+      }
+
+      return newSelection
+    })
+  }
+
+  // Open SKU info dialog
+  const openSkuInfo = (skuId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setActiveInfoDialog(skuId)
+  }
+
+  return (
+    <div className="flex text-white bg-[#0a0a14] min-h-screen">
+      <Sidebar />
+      <div className="flex-1">
+        {/* Fixed Navigation Header */}
+        <div className="sticky top-16 z-40 bg-[#0a0a14] border-b border-gray-800">
+          <div className="max-w-full mx-0 px-4">
+            <div className="flex overflow-x-auto">
+              <button
+                onClick={() => setActiveTab("description")}
+                className={`px-6 py-4 text-gray-300 hover:text-white focus:outline-none whitespace-nowrap ${
+                  activeTab === "description" ? "border-b-2 border-yellow-300 text-white" : ""
+                }`}
+              >
+                Description
+              </button>
+              <button
+                onClick={() => setActiveTab("product-skus")}
+                className={`px-6 py-4 text-gray-300 hover:text-white focus:outline-none whitespace-nowrap ${
+                  activeTab === "product-skus" ? "border-b-2 border-yellow-300 text-white" : ""
+                }`}
+              >
+                Product SKUs
+              </button>
+              <button
+                onClick={() => setActiveTab("advice")}
+                className={`px-6 py-4 text-gray-300 hover:text-white focus:outline-none whitespace-nowrap ${
+                  activeTab === "advice" ? "border-b-2 border-yellow-300 text-white" : ""
+                }`}
+              >
+                Advice
+              </button>
+              <button
+                onClick={() => setActiveTab("contacts")}
+                className={`px-6 py-4 text-gray-300 hover:text-white focus:outline-none whitespace-nowrap ${
+                  activeTab === "contacts" ? "border-b-2 border-yellow-300 text-white" : ""
+                }`}
+              >
+                Contacts
+              </button>
+              <div className="ml-auto">
+                <button
+                  onClick={() => setIsOrderBundleOpen(true)}
+                  className="px-6 py-4 text-gray-300 hover:text-white focus:outline-none whitespace-nowrap flex items-center"
+                >
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  Order Bundle
+                  <span className="ml-2 bg-yellow-300 text-black text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {selectedSkus.length}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="max-w-full mx-0 px-4 py-8 bg-[#0a0a14]">
+          {activeTab === "description" && (
+            <div>
+              <h1 className="text-3xl font-bold mb-4">Strategic Transaction Accounting Tool (STAT)</h1>
+              <p className="text-gray-300 mb-8">
+                EY Strategic Transaction Accounting Tool (EY STAT) is a cloud-based digital solution designed to
+                streamline and automate the process for calculating, tracking and reviewing purchase accounting
+                adjustments at a detailed and summarized level.
+              </p>
+
+              <div className="border-t border-gray-800 pt-8 mb-8">
+                <h2 className="text-xl font-bold text-yellow-300 mb-4">Commercial Description of the SKUs</h2>
+                <p className="text-gray-300">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                  dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                  aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                  dolore eu fugiat nulla pariatur.
+                </p>
+              </div>
+
+              <div className="border-t border-gray-800 pt-8">
+                <h2 className="text-xl font-bold text-yellow-300 mb-4">Select SKUs</h2>
+                <p className="text-gray-300 mb-6">
+                  Select multiple SKUs to add to your Order Bundle. Click on the circles to select or deselect items.
+                </p>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-[#0a0a14] text-left">
+                      <tr>
+                        <th className="px-3 py-3 text-gray-300 w-16"></th>
+                        <th className="px-3 py-3 text-gray-300 w-16 whitespace-nowrap overflow-hidden">SKU#</th>
+                        <th className="pl-16 py-3 text-gray-300">SKU Description</th>
+                        <th className="px-3 py-3 text-gray-300">Cost Basis</th>
+                        <th className="px-3 py-3 text-gray-300">Units/Fixed</th>
+                        <th className="px-3 py-3 text-gray-300">Increments</th>
+                        <th className="px-3 py-3 text-gray-300">Frequency</th>
+                        <th className="px-3 py-3 text-gray-300 w-16">Select</th>
+                        <th className="px-3 py-3 text-gray-300">SKU Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-t border-gray-800">
+                        <td className="px-3 py-4 align-middle">
+                          <button
+                            className="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs bg-[rgb(255,230,0)] text-black hover:bg-yellow-400 focus:outline-none"
+                            onClick={(e) => openSkuInfo("option-1", e)}
+                          >
+                            <Info className="h-3 w-3 mr-1" />
+                            INFO
+                          </button>
+                        </td>
+                        <td className="px-3 py-4 text-gray-300 w-16 whitespace-nowrap overflow-hidden text-ellipsis">
+                          1001039-001-aaa
+                        </td>
+                        <td className="pl-16 py-4 text-gray-300">CT-EYSTAT-MT01</td>
+                        <td className="px-3 py-4 text-gray-300">$1500</td>
+                        <td className="px-3 py-4 text-gray-300">Fixed Monthly Charge</td>
+                        <td className="px-3 py-4 text-gray-300">
+                          <input
+                            type="number"
+                            min={skuInfoData["option-1"].minIncrements}
+                            value={incrementValues["option-1"]}
+                            onChange={(e) => handleIncrementChange("option-1", e.target.value)}
+                            className="w-16 bg-[#0a0a14] border border-gray-700 rounded px-2 py-1 text-white text-center"
+                          />
+                        </td>
+                        <td className="px-3 py-4 text-gray-300">Monthly</td>
+                        <td className="px-3 py-4 text-center">
+                          <button
+                            onClick={() => toggleSkuSelection("option-1")}
+                            className={`h-5 w-5 rounded-full border ${selectedSkus.includes("option-1") ? "border-yellow-300" : "border-gray-500"} flex items-center justify-center`}
+                          >
+                            {selectedSkus.includes("option-1") && (
+                              <div className="h-2.5 w-2.5 rounded-full bg-yellow-300"></div>
+                            )}
+                          </button>
+                        </td>
+                        <td
+                          className={`px-3 py-4 ${selectedSkus.includes("option-1") ? "text-yellow-300" : "text-gray-300"}`}
+                        >
+                          Multi Tenant
+                        </td>
+                      </tr>
+                      <tr className="border-t border-gray-800">
+                        <td className="px-3 py-4 align-middle">
+                          <button
+                            className="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs bg-[rgb(255,230,0)] text-black hover:bg-yellow-400 focus:outline-none"
+                            onClick={(e) => openSkuInfo("option-2", e)}
+                          >
+                            <Info className="h-3 w-3 mr-1" />
+                            INFO
+                          </button>
+                        </td>
+                        <td className="px-3 py-4 text-gray-300 w-16 whitespace-nowrap overflow-hidden text-ellipsis">
+                          1001039-002-bbb
+                        </td>
+                        <td className="pl-16 py-4 text-gray-300">CT-EYSTAT-STSM02</td>
+                        <td className="px-3 py-4 text-gray-300">$2000</td>
+                        <td className="px-3 py-4 text-gray-300">Fixed Monthly Charge</td>
+                        <td className="px-3 py-4 text-gray-300">
+                          <input
+                            type="number"
+                            min={skuInfoData["option-2"].minIncrements}
+                            value={incrementValues["option-2"]}
+                            onChange={(e) => handleIncrementChange("option-2", e.target.value)}
+                            className="w-16 bg-[#0a0a14] border border-gray-700 rounded px-2 py-1 text-white text-center"
+                          />
+                        </td>
+                        <td className="px-3 py-4 text-gray-300">Monthly</td>
+                        <td className="px-3 py-4 text-center">
+                          <button
+                            onClick={() => toggleSkuSelection("option-2")}
+                            className={`h-5 w-5 rounded-full border ${selectedSkus.includes("option-2") ? "border-yellow-300" : "border-gray-500"} flex items-center justify-center`}
+                          >
+                            {selectedSkus.includes("option-2") && (
+                              <div className="h-2.5 w-2.5 rounded-full bg-yellow-300"></div>
+                            )}
+                          </button>
+                        </td>
+                        <td
+                          className={`px-3 py-4 ${selectedSkus.includes("option-2") ? "text-yellow-300" : "text-gray-300"}`}
+                        >
+                          Single Tenant Small/Medium
+                        </td>
+                      </tr>
+                      <tr className="border-t border-gray-800">
+                        <td className="px-3 py-4 align-middle">
+                          <button
+                            className="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs bg-[rgb(255,230,0)] text-black hover:bg-yellow-400 focus:outline-none"
+                            onClick={(e) => openSkuInfo("option-3", e)}
+                          >
+                            <Info className="h-3 w-3 mr-1" />
+                            INFO
+                          </button>
+                        </td>
+                        <td className="px-3 py-4 text-gray-300 w-16 whitespace-nowrap overflow-hidden text-ellipsis">
+                          1001039-003-ccc
+                        </td>
+                        <td className="pl-16 py-4 text-gray-300 flex items-center">
+                          CT-EYSTAT-SETUP01
+                          <span
+                            className="ml-2 flex items-center text-yellow-300 text-xs"
+                            title="Required with tenant options"
+                          >
+                            <LinkIcon className="h-3 w-3 mr-1" />
+                            Required with tenant
+                          </span>
+                        </td>
+                        <td className="px-3 py-4 text-gray-300">$5000</td>
+                        <td className="px-3 py-4 text-gray-300">Fixed, One Time</td>
+                        <td className="px-3 py-4 text-gray-300">
+                          <span className="text-gray-500">Not Applicable</span>
+                        </td>
+                        <td className="px-3 py-4 text-gray-300">One Time</td>
+                        <td className="px-3 py-4 text-center">
+                          <div
+                            className={`h-5 w-5 rounded-full border ${
+                              selectedSkus.includes("option-3")
+                                ? "border-yellow-300 bg-gray-700/50"
+                                : "border-gray-500 bg-gray-700/30 cursor-not-allowed"
+                            } flex items-center justify-center relative`}
+                            title="Automatically selected with tenant options"
+                          >
+                            {selectedSkus.includes("option-3") && (
+                              <div className="h-2.5 w-2.5 rounded-full bg-yellow-300"></div>
+                            )}
+                            {/* Add a small link icon to indicate this is linked to other selections */}
+                            <span className="absolute -top-1 -right-1 text-xs text-yellow-300">
+                              <LinkIcon className="h-3 w-3" />
+                            </span>
+                          </div>
+                        </td>
+                        <td
+                          className={`px-3 py-4 ${selectedSkus.includes("option-3") ? "text-yellow-300" : "text-gray-300"}`}
+                        >
+                          One-time Setup Cost
+                        </td>
+                      </tr>
+                      <tr className="border-t border-gray-800">
+                        <td className="px-3 py-4 align-middle">
+                          <button
+                            className="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs bg-[rgb(255,230,0)] text-black hover:bg-yellow-400 focus:outline-none"
+                            onClick={(e) => openSkuInfo("option-4", e)}
+                          >
+                            <Info className="h-3 w-3 mr-1" />
+                            INFO
+                          </button>
+                        </td>
+                        <td className="px-3 py-4 text-gray-300 w-16 whitespace-nowrap overflow-hidden text-ellipsis">
+                          1001039-004-ddd
+                        </td>
+                        <td className="pl-16 py-4 text-gray-300">CT-EYSTAT-SUPP01</td>
+                        <td className="px-3 py-4 text-gray-300">$800</td>
+                        <td className="px-3 py-4 text-gray-300">Fixed Monthly Charge</td>
+                        <td className="px-3 py-4 text-gray-300">
+                          <input
+                            type="number"
+                            min={skuInfoData["option-4"].minIncrements}
+                            value={incrementValues["option-4"]}
+                            onChange={(e) => handleIncrementChange("option-4", e.target.value)}
+                            className="w-16 bg-[#0a0a14] border border-gray-700 rounded px-2 py-1 text-white text-center"
+                          />
+                        </td>
+                        <td className="px-3 py-4 text-gray-300">Monthly</td>
+                        <td className="px-3 py-4 text-center">
+                          <button
+                            onClick={() => toggleSkuSelection("option-4")}
+                            className={`h-5 w-5 rounded-full border ${selectedSkus.includes("option-4") ? "border-yellow-300" : "border-gray-500"} flex items-center justify-center`}
+                          >
+                            {selectedSkus.includes("option-4") && (
+                              <div className="h-2.5 w-2.5 rounded-full bg-yellow-300"></div>
+                            )}
+                          </button>
+                        </td>
+                        <td
+                          className={`px-3 py-4 ${selectedSkus.includes("option-4") ? "text-yellow-300" : "text-gray-300"}`}
+                        >
+                          Support Package
+                        </td>
+                      </tr>
+                      <tr className="border-t border-gray-800">
+                        <td className="px-3 py-4 align-middle">
+                          <button
+                            className="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs bg-[rgb(255,230,0)] text-black hover:bg-yellow-400 focus:outline-none"
+                            onClick={(e) => openSkuInfo("option-5", e)}
+                          >
+                            <Info className="h-3 w-3 mr-1" />
+                            INFO
+                          </button>
+                        </td>
+                        <td className="px-3 py-4 text-gray-300 w-16 whitespace-nowrap overflow-hidden text-ellipsis">
+                          1001039-005-eee
+                        </td>
+                        <td className="pl-16 py-4 text-gray-300">CT-EYSTAT-DEPL01</td>
+                        <td className="px-3 py-4 text-gray-300">$150/hour</td>
+                        <td className="px-3 py-4 text-gray-300">Hours, One Time</td>
+                        <td className="px-3 py-4 text-gray-300">
+                          <input
+                            type="number"
+                            min={skuInfoData["option-5"].minIncrements}
+                            value={incrementValues["option-5"]}
+                            onChange={(e) => handleIncrementChange("option-5", e.target.value)}
+                            className="w-16 bg-[#0a0a14] border border-gray-700 rounded px-2 py-1 text-white text-center"
+                          />
+                        </td>
+                        <td className="px-3 py-4 text-gray-300">One Time</td>
+                        <td className="px-3 py-4 text-center">
+                          <button
+                            onClick={() => toggleSkuSelection("option-5")}
+                            className={`h-5 w-5 rounded-full border ${selectedSkus.includes("option-5") ? "border-yellow-300" : "border-gray-500"} flex items-center justify-center`}
+                          >
+                            {selectedSkus.includes("option-5") && (
+                              <div className="h-2.5 w-2.5 rounded-full bg-yellow-300"></div>
+                            )}
+                          </button>
+                        </td>
+                        <td
+                          className={`px-3 py-4 ${selectedSkus.includes("option-5") ? "text-yellow-300" : "text-gray-300"}`}
+                        >
+                          Deployment Labour Bundle
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="mt-6 flex justify-between items-center">
+                  <div className="text-gray-300">
+                    <span className="font-medium">{selectedSkus.length}</span> SKU{selectedSkus.length !== 1 ? "s" : ""}{" "}
+                    selected
+                  </div>
+                  <Button
+                    className="bg-yellow-300 hover:bg-yellow-400 text-black flex items-center"
+                    onClick={() => setIsOrderBundleOpen(true)}
+                  >
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Add to Order Bundle
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "product-skus" && (
+            <div>
+              <h2 className="text-2xl font-bold mb-6">Product SKUs</h2>
+              <p className="text-gray-300 mb-8">
+                Our Strategic Transaction Accounting Tool offers various packages tailored to your business needs. From
+                multi-tenant solutions for smaller businesses to dedicated single-tenant environments for large
+                enterprises, we have options to suit every requirement.
+              </p>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-gray-800/50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3">Multi-Tenant Solution</h3>
+                  <p className="text-gray-300 mb-4">
+                    Ideal for small to medium businesses looking for cost-effective solutions with all essential
+                    features.
+                  </p>
+                  <ul className="space-y-2 text-gray-300">
+                    <li>• Shared infrastructure with dedicated data isolation</li>
+                    <li>• Monthly subscription model</li>
+                    <li>• Standard support package</li>
+                    <li>• Regular feature updates</li>
+                  </ul>
+                </div>
+                <div className="bg-gray-800/50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3">Single-Tenant Solution</h3>
+                  <p className="text-gray-300 mb-4">
+                    Perfect for larger organizations requiring dedicated resources and enhanced customization.
+                  </p>
+                  <ul className="space-y-2 text-gray-300">
+                    <li>• Dedicated infrastructure</li>
+                    <li>• Enhanced security features</li>
+                    <li>• Priority support</li>
+                    <li>• Custom integration options</li>
+                  </ul>
+                </div>
+                <div className="bg-gray-800/50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3">Support Package</h3>
+                  <p className="text-gray-300 mb-4">
+                    Comprehensive support options to ensure your STAT implementation runs smoothly and efficiently.
+                  </p>
+                  <ul className="space-y-2 text-gray-300">
+                    <li>• 24/7 technical assistance</li>
+                    <li>• Dedicated support manager</li>
+                    <li>• Quarterly system health checks</li>
+                    <li>• Priority issue resolution</li>
+                    <li>• Regular maintenance updates</li>
+                  </ul>
+                </div>
+                <div className="bg-gray-800/50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3">Deployment Labour Bundle</h3>
+                  <p className="text-gray-300 mb-4">
+                    Professional services to implement and configure STAT according to your organization's specific
+                    needs.
+                  </p>
+                  <ul className="space-y-2 text-gray-300">
+                    <li>• Initial system setup and configuration</li>
+                    <li>• Data migration from existing systems</li>
+                    <li>• Integration with your current infrastructure</li>
+                    <li>• User training and onboarding</li>
+                    <li>• Post-deployment optimization</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "advice" && (
+            <div>
+              <h2 className="text-2xl font-bold mb-6">Advice</h2>
+              <p className="text-gray-300 mb-8">
+                Our team of experts is available to provide guidance on implementing and maximizing the value of the
+                Strategic Transaction Accounting Tool in your organization.
+              </p>
+              <div className="space-y-6">
+                <div className="bg-gray-800/50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3">Implementation Best Practices</h3>
+                  <p className="text-gray-300">
+                    For optimal results, we recommend a phased implementation approach, starting with core modules
+                    before expanding to more advanced features. This allows your team to adapt gradually and ensures a
+                    smoother transition.
+                  </p>
+                </div>
+                <div className="bg-gray-800/50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3">Training Resources</h3>
+                  <p className="text-gray-300">
+                    We offer comprehensive training programs for all user levels, from basic operation to advanced
+                    administration. Contact our training team to schedule sessions tailored to your organization's
+                    needs.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "contacts" && (
+            <div>
+              <h2 className="text-2xl font-bold mb-6">Contacts</h2>
+              <p className="text-gray-300 mb-8">
+                Reach out to our dedicated team for more information about the Strategic Transaction Accounting Tool.
+              </p>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="bg-gray-800/50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4">Commercial Team</h3>
+                  <div className="space-y-3">
+                    <p className="text-gray-300">
+                      <span className="font-medium">Contact:</span> John Smith
+                    </p>
+                    <p className="text-gray-300">
+                      <span className="font-medium">Email:</span> john.smith@example.com
+                    </p>
+                    <p className="text-gray-300">
+                      <span className="font-medium">Phone:</span> +1 (555) 123-4567
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-gray-800/50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-4">Technical Advice</h3>
+                  <div className="space-y-3">
+                    <p className="text-gray-300">
+                      <span className="font-medium">Contact:</span> Demand Management
+                    </p>
+                    <p className="text-gray-300">
+                      <span className="font-medium">Email:</span> support@example.com
+                    </p>
+                    <p className="text-gray-300">
+                      <span className="font-medium">Phone:</span> +1 (555) 987-6543
+                    </p>
+                    <p className="text-gray-300">
+                      <span className="font-medium">Hours:</span> 24/7 Support Available
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Order Bundle Panel */}
+        <OrderBundlePanel isOpen={isOrderBundleOpen} onClose={() => setIsOrderBundleOpen(false)} />
+
+        {/* SKU Info Dialogs */}
+        {activeInfoDialog && (
+          <SKUInfoDialog
+            isOpen={true}
+            onClose={() => setActiveInfoDialog(null)}
+            skuData={skuInfoData[activeInfoDialog as keyof typeof skuInfoData]}
+          />
+        )}
+      </div>
+    </div>
+  )
+}
+
